@@ -1,0 +1,5 @@
+waypoint_logger:
+ ros__parameters:
+   wp_file_path: /home/sel/pp_waypoints.csv
+   odom_topic: /ego_racecar/odom
+   save_waypoint_threshold: 0.1

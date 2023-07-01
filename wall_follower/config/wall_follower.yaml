@@ -1,0 +1,6 @@
+wall_follower_node:
+ ros__parameters:
+  kp: 1.0
+  kd: 0.005
+  ki: 0.001
+  L: 1.9

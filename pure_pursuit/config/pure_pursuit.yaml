@@ -1,0 +1,8 @@
+pure_pursuit:
+ ros__parameters:
+   L: 1.5
+   min_velocity: 4.0
+   max_velocity: 9.0
+   waypoints_file:    # full path to waypoints file
+   odom_topic: /ego_racecar/odom
+   drive_topic: /drive

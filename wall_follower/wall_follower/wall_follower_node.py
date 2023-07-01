@@ -46,7 +46,7 @@ class WallFollow(Node):
         )
         self.Dt = self.b * np.cos(alpha)
         self.Dt_plus1 = self.Dt + L * np.sin(alpha)
-        distance_to_maintain = 0.2
+        distance_to_maintain = 0.8
         error = self.calculate_error(distance_to_maintain, self.Dt_plus1)
         self.pid_control(error)
 
@@ -71,12 +71,7 @@ class WallFollow(Node):
         )
         self.prev_error = error
 
-        if abs(angle) > 2:
-            velocity = 0.5
-        elif 1 < abs(angle) <= 2:
-            velocity = 0.7
-        else:
-            velocity = 1.0
+        velocity = 1.0
 
         drive_msg = AckermannDriveStamped()
         drive_msg.header.stamp = self.get_clock().now().to_msg()

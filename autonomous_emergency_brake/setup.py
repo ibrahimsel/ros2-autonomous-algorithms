@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'autonomous_emergency_break'
+package_name = 'autonomous_emergency_brake'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'safety_node = autonomous_emergency_break.safety_node:main'
+            'safety_node = autonomous_emergency_brake.safety_node:main'
         ],
     },
 )

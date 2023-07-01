@@ -12,7 +12,7 @@ def generate_launch_description():
         output="screen",
     )
     node_safety = Node(
-        package="autonomous_emergency_break",
+        package="autonomous_emergency_brake",
         executable="safety_node",
         name="safety_node",
         output="screen",

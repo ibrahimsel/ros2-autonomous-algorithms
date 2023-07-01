@@ -1,5 +1,0 @@
-safety_node:
- ros__parameters:
-   brake_threshold: 100
-   drive_topic: drive
-   aeb_topic: emergency_braking

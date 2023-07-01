@@ -13,8 +13,9 @@ class SafetyNode(Node):
     def __init__(self):
         super().__init__("safety_node")
         self.get_logger().info("Safety node has been started")
-        self.declare_parameter("aeb_topic", "emergency_braking")
-        self.declare_parameter("brake_threshold", 0.0)
+        self.declare_parameter("aeb_topic", "/emergency_braking")
+        self.declare_parameter("drive_topic", "/drive")
+        self.declare_parameter("brake_threshold", 100.0)
 
         self.brake_threshold = (
             self.get_parameter("brake_threshold").get_parameter_value().double_value
@@ -24,13 +25,20 @@ class SafetyNode(Node):
             self.get_parameter("aeb_topic").get_parameter_value().string_value
         )
 
+        self.drive_topic = (
+            self.get_parameter("drive_topic").get_parameter_value().string_value
+        )
+
         self.scan_subscription = self.create_subscription(
             LaserScan, "/scan", self.scan_callback, 10
         )
         self.odom_subscription = self.create_subscription(
             Odometry, "/odom", self.odom_callback, 10
         )
-        self.aeb_publisher = self.create_publisher(Bool, "/" + self.aeb_topic, 10)
+        self.aeb_publisher = self.create_publisher(Bool, self.aeb_topic, 10)
+        self.drive_publisher = self.create_publisher(
+            AckermannDriveStamped, self.drive_topic, 10
+        )
         self.emergency_braking = False
         self.speed = 0.0
 
@@ -45,7 +53,7 @@ class SafetyNode(Node):
         angle_min = scan_msg.angle_min
         angle_max = scan_msg.angle_max
         angle_increment = scan_msg.angle_increment
-        
+
         for idx, r in enumerate(ranges):
             if np.isnan(r) or r > range_max or r < range_min:
                 continue
@@ -63,12 +71,11 @@ class SafetyNode(Node):
         emergency_msg.data = self.emergency_braking
         self.aeb_publisher.publish(emergency_msg)
 
-        # if self.emergency_braking:
-        #     self.get_logger().warn("Emergency braking is activated")
-        #     brake_msg = AckermannDriveStamped()
-        #     brake_msg.drive.speed = 0.0
-        #     brake_msg.drive.steering_angle = 0.0
-        #     self.brake_publisher.publish(brake_msg)
+        if self.emergency_braking:
+            brake_msg = AckermannDriveStamped()
+            brake_msg.drive.speed = 0.0
+            brake_msg.drive.steering_angle = 0.0
+            self.drive_publisher.publish(brake_msg)
 
 
 def main(args=None):
